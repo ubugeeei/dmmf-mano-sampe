@@ -1,25 +1,14 @@
-/**
- * POST /api/todos/:id/archive - Todoアーカイブ（ArchiveTodoワークフロー）
- */
+import { container } from "../../../container";
 
-import { archiveTodoWorkflow } from '../../../domain/workflows';
-import { storage } from '../../../utils/storage';
-
-export default defineEventHandler((event) => {
-  const id = getRouterParam(event, 'id')!;
-  const todos = storage.getAll();
-
-  const result = archiveTodoWorkflow(todos, id);
-
-  if (!result.ok) {
+export default defineEventHandler(async (event) => {
+  const id = getRouterParam(event, "id")!;
+  const uow = container.createUoW();
+  const r = await container.archiveTodo(id, uow).run();
+  if (!r.ok)
     throw createError({
-      statusCode: 400,
-      statusMessage: result.error,
+      statusCode: r.error.type === "NotFound" ? 404 : 400,
+      message: r.error.message,
     });
-  }
-
-  storage.save(result.value.todo);
-  console.log('[Event]', result.value.event.type, result.value.todo.id);
-
-  return result.value.todo;
+  uow.commit();
+  return r.value;
 });

@@ -11,20 +11,20 @@ type Todo = {
   id: string;
   title: string;
   description?: string;
-  priority: 'Low' | 'Medium' | 'High';
-  status: 'Active' | 'Completed' | 'Archived';
+  priority: "Low" | "Medium" | "High";
+  status: "Active" | "Completed" | "Archived";
   createdAt: string;
   completedAt?: string;
 };
 
 // Todo一覧の取得
-const { data: todos, refresh } = await useFetch<Todo[]>('/api/todos');
+const { data: todos, refresh } = await useFetch<Todo[]>("/api/todos");
 
 // フォーム状態
 const newTodo = ref({
-  title: '',
-  description: '',
-  priority: 'Medium' as const,
+  title: "",
+  description: "",
+  priority: "Medium" as const,
 });
 
 const errors = ref<{ field: string; message: string }[]>([]);
@@ -36,17 +36,17 @@ const createTodo = async () => {
   isSubmitting.value = true;
 
   try {
-    await $fetch('/api/todos', {
-      method: 'POST',
+    await $fetch("/api/todos", {
+      method: "POST",
       body: newTodo.value,
     });
-    newTodo.value = { title: '', description: '', priority: 'Medium' };
+    newTodo.value = { title: "", description: "", priority: "Medium" };
     await refresh();
   } catch (e: any) {
     if (e.data?.data) {
       errors.value = e.data.data;
     } else {
-      errors.value = [{ field: 'general', message: e.message || 'エラーが発生しました' }];
+      errors.value = [{ field: "general", message: e.message || "エラーが発生しました" }];
     }
   } finally {
     isSubmitting.value = false;
@@ -55,32 +55,32 @@ const createTodo = async () => {
 
 // Todo完了
 const completeTodo = async (id: string) => {
-  await $fetch(`/api/todos/${id}/complete`, { method: 'POST' });
+  await $fetch(`/api/todos/${id}/complete`, { method: "POST" });
   await refresh();
 };
 
 // Todo再開
 const reopenTodo = async (id: string) => {
-  await $fetch(`/api/todos/${id}/reopen`, { method: 'POST' });
+  await $fetch(`/api/todos/${id}/reopen`, { method: "POST" });
   await refresh();
 };
 
 // Todoアーカイブ
 const archiveTodo = async (id: string) => {
-  await $fetch(`/api/todos/${id}/archive`, { method: 'POST' });
+  await $fetch(`/api/todos/${id}/archive`, { method: "POST" });
   await refresh();
 };
 
 // フィルター
-const filter = ref<'all' | 'active' | 'completed'>('all');
+const filter = ref<"all" | "active" | "completed">("all");
 
 const filteredTodos = computed(() => {
   if (!todos.value) return [];
   switch (filter.value) {
-    case 'active':
-      return todos.value.filter((t) => t.status === 'Active');
-    case 'completed':
-      return todos.value.filter((t) => t.status === 'Completed');
+    case "active":
+      return todos.value.filter((t) => t.status === "Active");
+    case "completed":
+      return todos.value.filter((t) => t.status === "Completed");
     default:
       return todos.value;
   }
@@ -89,14 +89,14 @@ const filteredTodos = computed(() => {
 // 優先度の色
 const priorityColor = (priority: string) => {
   switch (priority) {
-    case 'High':
-      return '#e74c3c';
-    case 'Medium':
-      return '#f39c12';
-    case 'Low':
-      return '#27ae60';
+    case "High":
+      return "#e74c3c";
+    case "Medium":
+      return "#f39c12";
+    case "Low":
+      return "#27ae60";
     default:
-      return '#333';
+      return "#333";
   }
 };
 </script>
@@ -151,7 +151,7 @@ const priorityColor = (priority: string) => {
         </div>
 
         <button type="submit" :disabled="isSubmitting">
-          {{ isSubmitting ? '作成中...' : 'Todo作成' }}
+          {{ isSubmitting ? "作成中..." : "Todo作成" }}
         </button>
       </form>
     </section>
@@ -159,19 +159,26 @@ const priorityColor = (priority: string) => {
     <!-- フィルター -->
     <section class="filters">
       <button :class="{ active: filter === 'all' }" @click="filter = 'all'">すべて</button>
-      <button :class="{ active: filter === 'active' }" @click="filter = 'active'">アクティブ</button>
-      <button :class="{ active: filter === 'completed' }" @click="filter = 'completed'">完了</button>
+      <button :class="{ active: filter === 'active' }" @click="filter = 'active'">
+        アクティブ
+      </button>
+      <button :class="{ active: filter === 'completed' }" @click="filter = 'completed'">
+        完了
+      </button>
     </section>
 
     <!-- Todo一覧 -->
     <section class="todo-list">
       <h2>Todo一覧 ({{ filteredTodos.length }}件)</h2>
 
-      <div v-if="filteredTodos.length === 0" class="empty">
-        Todoがありません
-      </div>
+      <div v-if="filteredTodos.length === 0" class="empty">Todoがありません</div>
 
-      <article v-for="todo in filteredTodos" :key="todo.id" class="todo-item" :class="todo.status.toLowerCase()">
+      <article
+        v-for="todo in filteredTodos"
+        :key="todo.id"
+        class="todo-item"
+        :class="todo.status.toLowerCase()"
+      >
         <div class="todo-header">
           <span class="priority" :style="{ backgroundColor: priorityColor(todo.priority) }">
             {{ todo.priority }}
@@ -184,15 +191,9 @@ const priorityColor = (priority: string) => {
         <p v-if="todo.description" class="description">{{ todo.description }}</p>
 
         <div class="todo-actions">
-          <button v-if="todo.status === 'Active'" @click="completeTodo(todo.id)">
-            ✓ 完了
-          </button>
-          <button v-if="todo.status === 'Completed'" @click="reopenTodo(todo.id)">
-            ↩ 再開
-          </button>
-          <button class="archive" @click="archiveTodo(todo.id)">
-            🗑 アーカイブ
-          </button>
+          <button v-if="todo.status === 'Active'" @click="completeTodo(todo.id)">✓ 完了</button>
+          <button v-if="todo.status === 'Completed'" @click="reopenTodo(todo.id)">↩ 再開</button>
+          <button class="archive" @click="archiveTodo(todo.id)">🗑 アーカイブ</button>
         </div>
       </article>
     </section>
