@@ -1,12 +1,16 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  srcDir: "frontend",
+  serverDir: "backend",
+  imports: { autoImport: false },
+  components: { dirs: [] },
   app: {
     head: {
-      title: "DMMF Todo App - 関数型ドメインモデリング",
+      title: "DMMF Todo App - Functional Domain Modeling",
       meta: [
         {
           name: "description",
-          content: "Domain Modeling Made Functionalの概念を反映したTodoアプリ",
+          content: "Todo app demonstrating Domain Modeling Made Functional concepts",
         },
       ],
       link: [{ rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" }],
