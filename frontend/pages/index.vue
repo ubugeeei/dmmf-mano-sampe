@@ -8,12 +8,13 @@
  * - Colocation: All todo-related code in features/todo/
  */
 
+import { useAsyncData } from "#app";
+import { assertNever } from "#shared";
 import {
   createTodoApi,
   useTodos,
   useTodoForm,
-  todoGuards,
-  TodoForm,
+  TodoFormView,
   TodoFilters,
   TodoList,
 } from "~/features/todo";
@@ -23,25 +24,49 @@ const api = createTodoApi($fetch);
 const todos = useTodos(api);
 const form = useTodoForm(api, () => todos.refresh());
 
-await todos.fetch();
+await useAsyncData("todos", () => todos.fetch());
 
-const handleComplete = (todo: Todo) => {
-  if (todoGuards.isActive(todo)) {
-    todos.complete(todo);
+function handleComplete(todo: Todo): void {
+  switch (todo.status) {
+    case "Active":
+      todos.complete(todo);
+      break;
+    case "Completed":
+    case "Archived":
+      console.warn(`Cannot complete todo: expected Active status, got ${todo.status}`);
+      break;
+    default:
+      assertNever(todo);
   }
-};
+}
 
-const handleReopen = (todo: Todo) => {
-  if (todoGuards.isCompleted(todo)) {
-    todos.reopen(todo);
+function handleReopen(todo: Todo): void {
+  switch (todo.status) {
+    case "Completed":
+      todos.reopen(todo);
+      break;
+    case "Active":
+    case "Archived":
+      console.warn(`Cannot reopen todo: expected Completed status, got ${todo.status}`);
+      break;
+    default:
+      assertNever(todo);
   }
-};
+}
 
-const handleArchive = (todo: Todo) => {
-  if (todoGuards.isActive(todo) || todoGuards.isCompleted(todo)) {
-    todos.archive(todo);
+function handleArchive(todo: Todo): void {
+  switch (todo.status) {
+    case "Active":
+    case "Completed":
+      todos.archive(todo);
+      break;
+    case "Archived":
+      console.warn(`Cannot archive todo: already archived`);
+      break;
+    default:
+      assertNever(todo);
   }
-};
+}
 </script>
 
 <template>
@@ -51,15 +76,8 @@ const handleArchive = (todo: Todo) => {
       <p>Functional Domain Modeling with TypeScript</p>
     </header>
 
-    <TodoForm
-      :title="form.derived.value.title"
-      :description="form.derived.value.description"
-      :priority="form.derived.value.priority"
-      :is-submitting="form.derived.value.isSubmitting"
-      :can-submit="form.derived.value.canSubmit"
-      :title-error="form.derived.value.titleError"
-      :description-error="form.derived.value.descriptionError"
-      :errors="form.derived.value.errors"
+    <TodoFormView
+      v-bind="form.derived.value"
       @update:title="form.setTitle"
       @update:description="form.setDescription"
       @update:priority="form.setPriority"
@@ -73,10 +91,7 @@ const handleArchive = (todo: Todo) => {
     />
 
     <TodoList
-      :filtered="todos.derived.value.filtered"
-      :is-loading="todos.derived.value.isLoading"
-      :has-data="todos.derived.value.hasData"
-      :error="todos.derived.value.error"
+      v-bind="todos.derived.value"
       @retry="todos.fetch"
       @complete="handleComplete"
       @reopen="handleReopen"

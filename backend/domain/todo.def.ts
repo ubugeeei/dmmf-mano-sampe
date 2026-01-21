@@ -1,4 +1,4 @@
-import type { NewType, Result, Eff } from "../../shared/index.def";
+import type { newType, Result, Eff } from "#shared";
 
 /*
  *
@@ -17,7 +17,7 @@ import type { NewType, Result, Eff } from "../../shared/index.def";
  * - Format: todo-{timestamp}-{random}
  * - Must start with "todo-" prefix
  */
-export type TodoId = NewType<string, "TodoId">;
+export type TodoId = newType<string, "TodoId">;
 
 /**
  * Todo title (required).
@@ -27,7 +27,7 @@ export type TodoId = NewType<string, "TodoId">;
  * - Max length: 100 characters
  * - Auto-trimmed on creation
  */
-export type TodoTitle = NewType<string, "TodoTitle">;
+export type TodoTitle = newType<string, "TodoTitle">;
 
 /**
  * Todo description (optional).
@@ -38,7 +38,7 @@ export type TodoTitle = NewType<string, "TodoTitle">;
  * - Auto-trimmed on creation
  * - Empty string treated as undefined
  */
-export type TodoDescription = NewType<string, "TodoDescription">;
+export type TodoDescription = newType<string, "TodoDescription">;
 
 /**
  * Task priority level.
@@ -53,7 +53,7 @@ export type Priority = "Low" | "Medium" | "High";
  * Domain timestamp for temporal events.
  * Wraps Date for type safety.
  */
-export type Timestamp = NewType<Date, "Timestamp">;
+export type Timestamp = newType<Date, "Timestamp">;
 
 /*
  *

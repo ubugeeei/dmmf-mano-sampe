@@ -2,7 +2,16 @@
  * Async state machine implementation
  */
 
-import type { Async, Success, Refreshing, Error, AsyncGuards, AsyncOps } from "./async.def";
+import type {
+  Async,
+  Initial,
+  Loading,
+  Success,
+  Refreshing,
+  Error,
+  AsyncGuards,
+  AsyncOps,
+} from "./async.def";
 
 /*
  *

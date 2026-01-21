@@ -1,5 +1,5 @@
 import type { GetAll } from "./todo.def";
-import { eff } from "../../shared/index.impl";
+import { m } from "#shared";
 import { toDTO } from "../domain/todo.impl";
 
 export type { GetAll } from "./todo.def";
@@ -11,7 +11,7 @@ export type { GetAll } from "./todo.def";
  */
 
 export const getAll: GetAll = (repo) => (excludeArchived) =>
-  eff.map(repo.findAll(), (todos) =>
+  m(repo.findAll(), (todos) =>
     todos
       .filter((t) => !excludeArchived || t._tag !== "Archived")
       .sort((a, b) => +b.createdAt - +a.createdAt)

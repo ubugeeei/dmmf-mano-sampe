@@ -1,3 +1,4 @@
+import { defineEventHandler } from "h3";
 import { container } from "../../container";
 
 export default defineEventHandler(async () => {

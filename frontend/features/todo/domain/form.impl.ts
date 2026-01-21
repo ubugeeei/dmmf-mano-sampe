@@ -2,14 +2,15 @@
  * Form state machine implementation
  */
 
-import { ok, err } from "../../../../shared/index.impl";
-import type { Result } from "../../../../shared/index.def";
+import { ok, err } from "#shared";
+import type { Result } from "#shared";
 import type {
   TodoFormInput,
   ValidationError,
   IdleForm,
   EditingForm,
   SubmittingForm,
+  SuccessForm,
   ErrorForm,
   TodoForm,
   FormGuards,

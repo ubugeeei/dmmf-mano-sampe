@@ -5,37 +5,51 @@
 import { ref, computed } from "vue";
 import type { Async } from "../domain/async.def";
 import type { Todo, ActiveTodo, CompletedTodo, TodoFilter } from "../domain/todo.def";
-import type { TodoApi } from "../api/todoApi.def";
-import { asyncOps, asyncGuards } from "../domain/async.impl";
+import type { TodoApi, ApiError } from "../api/todoApi.def";
+import { asyncOps } from "../domain/async.impl";
 import { filterTodos, unwrapId } from "../domain/todo.impl";
 
-export const useTodos = (api: TodoApi) => {
-  const guards = asyncGuards<Todo[], string>();
+const getErrorMessage = (error: ApiError): string => {
+  switch (error._tag) {
+    case "NetworkError":
+      return error.message;
+    case "ValidationError":
+      return error.errors.map((e) => e.message).join(", ");
+    case "NotFoundError":
+      return `Not found: ${error.id}`;
+  }
+};
 
+export const useTodos = (api: TodoApi) => {
   const state = ref<Async<Todo[], string>>(asyncOps.initial());
   const filter = ref<TodoFilter>("all");
 
   const derived = computed(() => {
     const todos = asyncOps.getOrElse(state.value, []);
     return {
-      isLoading: guards.isPending(state.value),
-      hasData: guards.hasData(state.value),
-      error: guards.isError(state.value) ? state.value.error : undefined,
+      isLoading: state.value._tag === "Loading" || state.value._tag === "Refreshing",
+      hasData: state.value._tag === "Success" || state.value._tag === "Refreshing",
+      error: state.value._tag === "Error" ? state.value.error : undefined,
       filtered: filterTodos(todos, filter.value),
     };
   });
 
-  const fetch = async () => {
+  const fetch = async (): Promise<void> => {
     state.value = asyncOps.loading();
     const result = await api.fetchAll();
-    state.value = result.ok ? asyncOps.success(result.value) : asyncOps.error(result.error.message);
+    state.value = result.ok
+      ? asyncOps.success(result.value)
+      : asyncOps.error(getErrorMessage(result.error));
   };
 
-  const refresh = async () => {
-    if (!guards.hasData(state.value)) return fetch();
-    state.value = { _tag: "Refreshing", data: state.value.data, fetchedAt: new Date() };
+  const refresh = async (): Promise<void> => {
+    const current = state.value;
+    if (current._tag !== "Success" && current._tag !== "Refreshing") return fetch();
+    state.value = { _tag: "Refreshing", data: current.data, fetchedAt: new Date() };
     const result = await api.fetchAll();
-    state.value = result.ok ? asyncOps.success(result.value) : asyncOps.error(result.error.message);
+    state.value = result.ok
+      ? asyncOps.success(result.value)
+      : asyncOps.error(getErrorMessage(result.error));
   };
 
   const complete = async (todo: ActiveTodo) => {

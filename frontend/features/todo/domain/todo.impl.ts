@@ -2,7 +2,7 @@
  * Todo domain implementation
  */
 
-import { unsafeCoerce } from "../../../../shared/index.impl";
+import { unsafeCoerce } from "#shared";
 import type {
   Todo,
   TodoId,

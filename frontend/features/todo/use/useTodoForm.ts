@@ -22,18 +22,18 @@ export const useTodoForm = (api: TodoApi, onSuccess?: () => void) => {
     title: form.value.input.title,
     description: form.value.input.description,
     priority: form.value.input.priority,
-    isSubmitting: formGuards.isSubmitting(form.value),
+    isSubmitting: form.value._tag === "Submitting",
     canSubmit: formGuards.canSubmit(form.value),
-    errors: formGuards.isError(form.value) ? form.value.errors : [],
+    errors: form.value._tag === "Error" ? form.value.errors : [],
     titleError: getFieldError(form.value, "title"),
     descriptionError: getFieldError(form.value, "description"),
   }));
 
-  const updateInput = (field: keyof TodoFormInput, value: string) => {
+  const updateInput = (field: keyof TodoFormInput, value: string): void => {
     const current = form.value;
-    if (formGuards.isIdle(current) || formGuards.isError(current)) {
+    if (current._tag === "Idle" || current._tag === "Error") {
       form.value = formTransitions.edit(current, field, value);
-    } else if (formGuards.isEditing(current)) {
+    } else if (current._tag === "Editing") {
       form.value = {
         ...current,
         input: { ...current.input, [field]: value },
@@ -44,26 +44,23 @@ export const useTodoForm = (api: TodoApi, onSuccess?: () => void) => {
 
   const setTitle = (value: string) => updateInput("title", value);
   const setDescription = (value: string) => updateInput("description", value);
-  const setPriority = (value: Priority) => {
+  const setPriority = (value: Priority): void => {
     const current = form.value;
-    if (
-      formGuards.isIdle(current) ||
-      formGuards.isError(current) ||
-      formGuards.isEditing(current)
-    ) {
+    if (current._tag === "Idle" || current._tag === "Error" || current._tag === "Editing") {
       form.value = {
         _tag: "Editing",
         input: { ...current.input, priority: value },
-        touched: formGuards.isEditing(current)
-          ? new Set([...current.touched, "priority"])
-          : new Set(["priority"]),
+        touched:
+          current._tag === "Editing"
+            ? new Set([...current.touched, "priority"])
+            : new Set(["priority"]),
       };
     }
   };
 
   const submit = async (): Promise<boolean> => {
     const current = form.value;
-    if (!formGuards.isEditing(current) && !formGuards.isError(current)) return false;
+    if (current._tag !== "Editing" && current._tag !== "Error") return false;
 
     const validationResult = validateForm(current.input);
     if (!validationResult.ok) {
@@ -94,7 +91,12 @@ export const useTodoForm = (api: TodoApi, onSuccess?: () => void) => {
             field: e.field as keyof TodoFormInput | "general",
             message: e.message,
           }))
-        : [{ field: "general", message: result.error.message }];
+        : [
+            {
+              field: "general",
+              message: "message" in result.error ? result.error.message : "Unknown error",
+            },
+          ];
 
     form.value = { _tag: "Error", input: current.input, errors: apiErrors };
     return false;

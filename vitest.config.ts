@@ -7,15 +7,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "~": resolve(__dirname, "frontend"),
+      "#shared": resolve(__dirname, "shared"),
     },
   },
   test: {
     include: ["**/*.test.ts"],
-    browser: {
-      enabled: true,
-      provider: "playwright",
-      name: "chromium",
-      headless: true,
-    },
   },
 });

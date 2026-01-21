@@ -21,6 +21,9 @@ importers:
         specifier: ^1.57.0
         version: 1.57.0
     devDependencies:
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.3
+        version: 6.0.3(vite@7.3.1(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.9.3))
       oxfmt:
         specifier: ^0.26.0
         version: 0.26.0
@@ -30,6 +33,9 @@ importers:
       vite-plus:
         specifier: latest
         version: 0.0.0-9f9a209dd123932614c8b5a568375a002e34562b(esbuild@0.27.2)(jiti@2.6.1)(terser@5.46.0)(typescript@5.9.3)(yaml@2.8.2)
+      vitest:
+        specifier: ^4.0.17
+        version: 4.0.17(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(yaml@2.8.2)
 
 packages:
 

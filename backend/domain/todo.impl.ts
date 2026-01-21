@@ -21,7 +21,7 @@ import type {
   ArchiveTodo,
   ToDTO,
 } from "./todo.def";
-import { unsafeCoerce, unwrap, ok, err } from "../../shared/index.impl";
+import { unsafeCoerce, unwrap, ok, err } from "#shared";
 
 export type {
   TodoId,

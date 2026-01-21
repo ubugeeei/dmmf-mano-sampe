@@ -10,7 +10,7 @@
  *   Error -[retry]-> Submitting
  */
 
-import type { Result } from "../../../../shared/index.def";
+import type { Result } from "#shared";
 import type { Priority } from "./todo.def";
 
 /*

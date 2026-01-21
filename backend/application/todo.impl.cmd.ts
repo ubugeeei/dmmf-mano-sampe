@@ -1,5 +1,7 @@
-import type { Create, Complete, Reopen, Archive } from "./todo.def";
-import { eff } from "../../shared/index.impl";
+import type { Eff } from "#shared";
+import type { Create, Complete, Reopen, Archive, CommandError } from "./todo.def";
+import type { TodoDTO } from "../domain/todo.def";
+import { fail, m, fm } from "#shared";
 import {
   todoId,
   todoTitle,
@@ -32,11 +34,11 @@ export const create: Create = (repo) => (uow) => (input) => {
       !desc.ok && { field: "description", message: desc.error },
       !prio.ok && { field: "priority", message: prio.error },
     ].filter((e): e is { field: string; message: string } => !!e);
-    return eff.fail(Err.validation(errs));
+    return fail(Err.validation(errs));
   }
 
   const todo = createTodo(todoId.generate(), title.value, desc.value, prio.value);
-  return eff.map(repo.save(todo), (t) => {
+  return m(repo.save(todo), (t) => {
     uow.events.push(todoEvent.created(t.id));
     return toDTO(t);
   });
@@ -44,12 +46,12 @@ export const create: Create = (repo) => (uow) => (input) => {
 
 export const complete: Complete = (repo) => (uow) => (id) => {
   const parsed = todoId.parse(id);
-  if (!parsed.ok) return eff.fail(Err.invalidId(parsed.error));
+  if (!parsed.ok) return fail(Err.invalidId(parsed.error));
 
-  return eff.flatMap(repo.findById(parsed.value), (t) => {
-    if (!t) return eff.fail(Err.notFound());
-    if (t._tag !== "Active") return eff.fail(Err.invalidState("Active", t._tag));
-    return eff.map(repo.save(completeTodo(t)), (s) => {
+  return fm(repo.findById(parsed.value), (t): Eff<TodoDTO, CommandError> => {
+    if (!t) return fail(Err.notFound());
+    if (t._tag !== "Active") return fail(Err.invalidState("Active", t._tag));
+    return m(repo.save(completeTodo(t)), (s) => {
       uow.events.push(todoEvent.completed(s.id));
       return toDTO(s);
     });
@@ -58,12 +60,12 @@ export const complete: Complete = (repo) => (uow) => (id) => {
 
 export const reopen: Reopen = (repo) => (uow) => (id) => {
   const parsed = todoId.parse(id);
-  if (!parsed.ok) return eff.fail(Err.invalidId(parsed.error));
+  if (!parsed.ok) return fail(Err.invalidId(parsed.error));
 
-  return eff.flatMap(repo.findById(parsed.value), (t) => {
-    if (!t) return eff.fail(Err.notFound());
-    if (t._tag !== "Completed") return eff.fail(Err.invalidState("Completed", t._tag));
-    return eff.map(repo.save(reopenTodo(t)), (s) => {
+  return fm(repo.findById(parsed.value), (t): Eff<TodoDTO, CommandError> => {
+    if (!t) return fail(Err.notFound());
+    if (t._tag !== "Completed") return fail(Err.invalidState("Completed", t._tag));
+    return m(repo.save(reopenTodo(t)), (s) => {
       uow.events.push(todoEvent.reopened(s.id));
       return toDTO(s);
     });
@@ -72,12 +74,12 @@ export const reopen: Reopen = (repo) => (uow) => (id) => {
 
 export const archive: Archive = (repo) => (uow) => (id) => {
   const parsed = todoId.parse(id);
-  if (!parsed.ok) return eff.fail(Err.invalidId(parsed.error));
+  if (!parsed.ok) return fail(Err.invalidId(parsed.error));
 
-  return eff.flatMap(repo.findById(parsed.value), (t) => {
-    if (!t) return eff.fail(Err.notFound());
-    if (t._tag === "Archived") return eff.fail(Err.invalidState("Active|Completed", t._tag));
-    return eff.map(repo.save(archiveTodo(t)), (s) => {
+  return fm(repo.findById(parsed.value), (t): Eff<TodoDTO, CommandError> => {
+    if (!t) return fail(Err.notFound());
+    if (t._tag === "Archived") return fail(Err.invalidState("Active|Completed", t._tag));
+    return m(repo.save(archiveTodo(t)), (s) => {
       uow.events.push(todoEvent.archived(s.id));
       return toDTO(s);
     });

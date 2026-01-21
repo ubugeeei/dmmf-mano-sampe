@@ -1,4 +1,4 @@
-import type { Eff } from "../../shared/index.def";
+import type { Eff } from "#shared";
 import type { TodoRepository, TodoDTO } from "../domain/todo.def";
 import type { UoW } from "./uow.def";
 

@@ -4,8 +4,8 @@
  * Wraps fetch calls with Result type for explicit error handling.
  */
 
-import { ok, err } from "../../../../shared/index.impl";
-import type { Result } from "../../../../shared/index.def";
+import { ok, err } from "#shared";
+import type { Result } from "#shared";
 import type { Todo, ActiveTodo, CompletedTodo, ArchivedTodo } from "../domain/todo.def";
 import type {
   TodoApi,
@@ -58,7 +58,7 @@ export const createTodoApi = ($fetch: typeof globalThis.$fetch): TodoApi => ({
       return ok(fromDTO(dto) as ActiveTodo);
     } catch (e: unknown) {
       if (isValidationError(e)) {
-        return err(validationError(e.data.data));
+        return err(validationError(e.data?.data ?? []));
       }
       return err(networkError(e instanceof Error ? e.message : "Failed to create todo"));
     }

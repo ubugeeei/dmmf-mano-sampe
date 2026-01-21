@@ -5,7 +5,7 @@
  * No exceptions are thrown - errors are values.
  */
 
-import type { Result } from "../../../../shared/index.def";
+import type { Result } from "#shared";
 import type { Todo, ActiveTodo, CompletedTodo, ArchivedTodo, Priority } from "../domain/todo.def";
 
 /*

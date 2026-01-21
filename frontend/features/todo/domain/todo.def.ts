@@ -6,7 +6,7 @@
  * by constraining state transitions at the type level.
  */
 
-import type { NewType } from "../../../../shared/index.def";
+import type { newType } from "#shared";
 
 /*
  *
@@ -14,9 +14,9 @@ import type { NewType } from "../../../../shared/index.def";
  *
  */
 
-export type TodoId = NewType<string, "TodoId">;
-export type TodoTitle = NewType<string, "TodoTitle">;
-export type TodoDescription = NewType<string, "TodoDescription">;
+export type TodoId = newType<string, "TodoId">;
+export type TodoTitle = newType<string, "TodoTitle">;
+export type TodoDescription = newType<string, "TodoDescription">;
 export type Priority = "Low" | "Medium" | "High";
 export type TodoStatus = "Active" | "Completed" | "Archived";
 

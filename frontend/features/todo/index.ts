@@ -35,7 +35,7 @@ export { useTodos } from "./use/useTodos";
 export { useTodoForm } from "./use/useTodoForm";
 
 // Components
-export { default as TodoForm } from "./TodoForm.vue";
+export { default as TodoFormView } from "./TodoForm.vue";
 export { default as TodoFilters } from "./TodoFilters.vue";
 export { default as TodoList } from "./TodoList.vue";
 export { default as TodoItem } from "./TodoItem.vue";

@@ -1,11 +1,11 @@
 /*
  *
- * NewType
+ * newType
  *
  */
 
 declare const brand: unique symbol;
-export type NewType<T, B extends string> = T & { readonly [brand]: B };
+export type newType<T, B extends string> = T & { readonly [brand]: B };
 
 /*
  *
