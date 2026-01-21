@@ -1,4 +1,4 @@
-import type { TodoEvent } from "../domain/todo.def";
+import type { TodoEvent } from '../domain/todo.def'
 
 /*
  *
@@ -7,8 +7,8 @@ import type { TodoEvent } from "../domain/todo.def";
  */
 
 export type EventBus = {
-  publish: (e: TodoEvent) => void;
-  subscribe: (h: (e: TodoEvent) => void) => () => void;
-};
+  publish: (e: TodoEvent) => void
+  subscribe: (h: (e: TodoEvent) => void) => () => void
+}
 
-export type CreateEventBus = () => EventBus;
+export type CreateEventBus = () => EventBus

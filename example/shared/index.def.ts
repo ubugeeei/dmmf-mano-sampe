@@ -4,8 +4,8 @@
  *
  */
 
-declare const brand: unique symbol;
-export type NewType<T, B extends string> = T & { readonly [brand]: B };
+declare const brand: unique symbol
+export type NewType<T, B extends string> = T & { readonly [brand]: B }
 
 /*
  *
@@ -13,7 +13,7 @@ export type NewType<T, B extends string> = T & { readonly [brand]: B };
  *
  */
 
-export type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+export type Result<T, E> = { ok: true, value: T } | { ok: false, error: E }
 
 /*
  *
@@ -21,4 +21,4 @@ export type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
  *
  */
 
-export type Eff<T, E> = { run: () => Promise<Result<T, E>> };
+export type Eff<T, E> = { run: () => Promise<Result<T, E>> }

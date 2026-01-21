@@ -1,22 +1,28 @@
 export default defineNuxtConfig({
-  compatibilityDate: "2024-11-01",
+  modules: ['@nuxt/eslint'],
+  devtools: { enabled: true },
+  app: {
+    head: {
+      title: 'DMMF Todo App - 関数型ドメインモデリング',
+      meta: [
+        {
+          name: 'description',
+          content: 'Domain Modeling Made Functionalの概念を反映したTodoアプリ',
+        },
+      ],
+      link: [{ rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/water.css@2/out/water.css' }],
+    },
+  },
   future: {
     compatibilityVersion: 4,
   },
-  devtools: { enabled: true },
+  compatibilityDate: '2024-11-01',
   typescript: {
     strict: true,
   },
-  app: {
-    head: {
-      title: "DMMF Todo App - 関数型ドメインモデリング",
-      meta: [
-        {
-          name: "description",
-          content: "Domain Modeling Made Functionalの概念を反映したTodoアプリ",
-        },
-      ],
-      link: [{ rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/water.css@2/out/water.css" }],
+  eslint: {
+    config: {
+      stylistic: true,
     },
   },
-});
+})

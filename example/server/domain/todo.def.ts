@@ -1,4 +1,4 @@
-import type { NewType, Result, Eff } from "../../shared/index.def";
+import type { NewType, Result, Eff } from '../../shared/index.def'
 
 /*
  *
@@ -17,7 +17,7 @@ import type { NewType, Result, Eff } from "../../shared/index.def";
  * - Format: todo-{timestamp}-{random}
  * - Must start with "todo-" prefix
  */
-export type TodoId = NewType<string, "TodoId">;
+export type TodoId = NewType<string, 'TodoId'>
 
 /**
  * Todo title (required).
@@ -27,7 +27,7 @@ export type TodoId = NewType<string, "TodoId">;
  * - Max length: 100 characters
  * - Auto-trimmed on creation
  */
-export type TodoTitle = NewType<string, "TodoTitle">;
+export type TodoTitle = NewType<string, 'TodoTitle'>
 
 /**
  * Todo description (optional).
@@ -38,7 +38,7 @@ export type TodoTitle = NewType<string, "TodoTitle">;
  * - Auto-trimmed on creation
  * - Empty string treated as undefined
  */
-export type TodoDescription = NewType<string, "TodoDescription">;
+export type TodoDescription = NewType<string, 'TodoDescription'>
 
 /**
  * Task priority level.
@@ -47,13 +47,13 @@ export type TodoDescription = NewType<string, "TodoDescription">;
  * - Valid values: "Low" | "Medium" | "High"
  * - Default: "Medium" when undefined
  */
-export type Priority = "Low" | "Medium" | "High";
+export type Priority = 'Low' | 'Medium' | 'High'
 
 /**
  * Domain timestamp for temporal events.
  * Wraps Date for type safety.
  */
-export type Timestamp = NewType<Date, "Timestamp">;
+export type Timestamp = NewType<Date, 'Timestamp'>
 
 /*
  *
@@ -80,41 +80,41 @@ export type Timestamp = NewType<Date, "Timestamp">;
  * Initial state for all new todos.
  */
 export type ActiveTodo = {
-  _tag: "Active";
-  id: TodoId;
-  title: TodoTitle;
-  description?: TodoDescription;
-  priority: Priority;
-  createdAt: Timestamp;
-};
+  _tag: 'Active'
+  id: TodoId
+  title: TodoTitle
+  description?: TodoDescription
+  priority: Priority
+  createdAt: Timestamp
+}
 
 /**
  * A todo that has been marked as done.
  * Can be reopened to return to Active state.
  */
-export type CompletedTodo = Omit<ActiveTodo, "_tag"> & {
-  _tag: "Completed";
-  completedAt: Timestamp;
-};
+export type CompletedTodo = Omit<ActiveTodo, '_tag'> & {
+  _tag: 'Completed'
+  completedAt: Timestamp
+}
 
 /**
  * A todo that has been soft-deleted.
  * Terminal state - cannot be restored.
  */
 export type ArchivedTodo = {
-  _tag: "Archived";
-  id: TodoId;
-  title: TodoTitle;
-  description?: TodoDescription;
-  priority: Priority;
-  createdAt: Timestamp;
-  archivedAt: Timestamp;
-};
+  _tag: 'Archived'
+  id: TodoId
+  title: TodoTitle
+  description?: TodoDescription
+  priority: Priority
+  createdAt: Timestamp
+  archivedAt: Timestamp
+}
 
 /**
  * Discriminated union of all todo states.
  */
-export type Todo = ActiveTodo | CompletedTodo | ArchivedTodo;
+export type Todo = ActiveTodo | CompletedTodo | ArchivedTodo
 
 /*
  *
@@ -123,15 +123,15 @@ export type Todo = ActiveTodo | CompletedTodo | ArchivedTodo;
  */
 
 export type TodoDTO = {
-  id: string;
-  title: string;
-  description?: string;
-  priority: Priority;
-  status: string;
-  createdAt: string;
-  completedAt?: string;
-  archivedAt?: string;
-};
+  id: string
+  title: string
+  description?: string
+  priority: Priority
+  status: string
+  createdAt: string
+  completedAt?: string
+  archivedAt?: string
+}
 
 /*
  *
@@ -143,10 +143,10 @@ export type TodoDTO = {
  */
 
 export type TodoEvent = {
-  type: string;
-  todoId: TodoId;
-  at: Timestamp;
-};
+  type: string
+  todoId: TodoId
+  at: Timestamp
+}
 
 /*
  *
@@ -155,10 +155,10 @@ export type TodoEvent = {
  */
 
 export type TodoRepository = {
-  findById: (id: TodoId) => Eff<Todo | undefined, never>;
-  findAll: () => Eff<Todo[], never>;
-  save: (t: Todo) => Eff<Todo, never>;
-};
+  findById: (id: TodoId) => Eff<Todo | undefined, never>
+  findAll: () => Eff<Todo[], never>
+  save: (t: Todo) => Eff<Todo, never>
+}
 
 /*
  *
@@ -167,36 +167,36 @@ export type TodoRepository = {
  */
 
 export type TodoIdOps = {
-  generate: () => TodoId;
-  parse: (v: string) => Result<TodoId, string>;
-  unwrap: (id: TodoId) => string;
-};
+  generate: () => TodoId
+  parse: (v: string) => Result<TodoId, string>
+  unwrap: (id: TodoId) => string
+}
 
 export type TodoTitleOps = {
-  create: (v: string) => Result<TodoTitle, string>;
-  unwrap: (t: TodoTitle) => string;
-};
+  create: (v: string) => Result<TodoTitle, string>
+  unwrap: (t: TodoTitle) => string
+}
 
 export type TodoDescriptionOps = {
-  create: (v?: string) => Result<TodoDescription | undefined, string>;
-  unwrap: (d: TodoDescription) => string;
-};
+  create: (v?: string) => Result<TodoDescription | undefined, string>
+  unwrap: (d: TodoDescription) => string
+}
 
 export type PriorityOps = {
-  create: (v?: string) => Result<Priority, string>;
-};
+  create: (v?: string) => Result<Priority, string>
+}
 
 export type TimestampOps = {
-  now: () => Timestamp;
-  toISO: (t: Timestamp) => string;
-};
+  now: () => Timestamp
+  toISO: (t: Timestamp) => string
+}
 
 export type TodoEventOps = {
-  created: (id: TodoId) => TodoEvent;
-  completed: (id: TodoId) => TodoEvent;
-  reopened: (id: TodoId) => TodoEvent;
-  archived: (id: TodoId) => TodoEvent;
-};
+  created: (id: TodoId) => TodoEvent
+  completed: (id: TodoId) => TodoEvent
+  reopened: (id: TodoId) => TodoEvent
+  archived: (id: TodoId) => TodoEvent
+}
 
 /*
  *
@@ -209,12 +209,12 @@ export type CreateTodo = (
   title: TodoTitle,
   description: TodoDescription | undefined,
   priority: Priority,
-) => ActiveTodo;
+) => ActiveTodo
 
-export type CompleteTodo = (t: ActiveTodo) => CompletedTodo;
+export type CompleteTodo = (t: ActiveTodo) => CompletedTodo
 
-export type ReopenTodo = (t: CompletedTodo) => ActiveTodo;
+export type ReopenTodo = (t: CompletedTodo) => ActiveTodo
 
-export type ArchiveTodo = (t: ActiveTodo | CompletedTodo) => ArchivedTodo;
+export type ArchiveTodo = (t: ActiveTodo | CompletedTodo) => ArchivedTodo
 
-export type ToDTO = (t: Todo) => TodoDTO;
+export type ToDTO = (t: Todo) => TodoDTO

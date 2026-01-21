@@ -1,58 +1,58 @@
-import { describe, it, expect } from "vitest";
-import { createTodoRepository } from "./todoRepository.impl";
-import { TodoId, TodoTitle, createTodo, completeTodo } from "../domain/todo.impl";
+import { describe, it, expect } from 'vitest'
+import { createTodoRepository } from './todoRepository.impl'
+import { TodoId, TodoTitle, createTodo, completeTodo } from '../domain/todo.impl'
 
-describe("TodoRepository", () => {
+describe('TodoRepository', () => {
   const makeTodo = () => {
-    const id = TodoId.generate();
-    const title = TodoTitle.create("Test");
-    if (!title.ok) throw new Error();
-    return createTodo(id, title.value, undefined, "Medium");
-  };
+    const id = TodoId.generate()
+    const title = TodoTitle.create('Test')
+    if (!title.ok) throw new Error()
+    return createTodo(id, title.value, undefined, 'Medium')
+  }
 
-  it("save and findById", async () => {
-    const repo = createTodoRepository();
-    const todo = makeTodo();
+  it('save and findById', async () => {
+    const repo = createTodoRepository()
+    const todo = makeTodo()
 
-    await repo.save(todo).run();
-    const r = await repo.findById(todo.id).run();
+    await repo.save(todo).run()
+    const r = await repo.findById(todo.id).run()
 
-    expect(r.ok).toBe(true);
-    if (r.ok) expect(r.value).toEqual(todo);
-  });
+    expect(r.ok).toBe(true)
+    if (r.ok) expect(r.value).toEqual(todo)
+  })
 
-  it("findById returns undefined for non-existent", async () => {
-    const repo = createTodoRepository();
-    const id = TodoId.generate();
+  it('findById returns undefined for non-existent', async () => {
+    const repo = createTodoRepository()
+    const id = TodoId.generate()
 
-    const r = await repo.findById(id).run();
-    expect(r.ok).toBe(true);
-    if (r.ok) expect(r.value).toBeUndefined();
-  });
+    const r = await repo.findById(id).run()
+    expect(r.ok).toBe(true)
+    if (r.ok) expect(r.value).toBeUndefined()
+  })
 
-  it("findAll returns all todos", async () => {
-    const repo = createTodoRepository();
-    const todo1 = makeTodo();
-    const todo2 = makeTodo();
+  it('findAll returns all todos', async () => {
+    const repo = createTodoRepository()
+    const todo1 = makeTodo()
+    const todo2 = makeTodo()
 
-    await repo.save(todo1).run();
-    await repo.save(todo2).run();
+    await repo.save(todo1).run()
+    await repo.save(todo2).run()
 
-    const r = await repo.findAll().run();
-    expect(r.ok).toBe(true);
-    if (r.ok) expect(r.value).toHaveLength(2);
-  });
+    const r = await repo.findAll().run()
+    expect(r.ok).toBe(true)
+    if (r.ok) expect(r.value).toHaveLength(2)
+  })
 
-  it("save updates existing todo", async () => {
-    const repo = createTodoRepository();
-    const todo = makeTodo();
-    await repo.save(todo).run();
+  it('save updates existing todo', async () => {
+    const repo = createTodoRepository()
+    const todo = makeTodo()
+    await repo.save(todo).run()
 
-    const completed = completeTodo(todo);
-    await repo.save(completed).run();
+    const completed = completeTodo(todo)
+    await repo.save(completed).run()
 
-    const r = await repo.findById(todo.id).run();
-    expect(r.ok).toBe(true);
-    if (r.ok && r.value) expect(r.value._tag).toBe("Completed");
-  });
-});
+    const r = await repo.findById(todo.id).run()
+    expect(r.ok).toBe(true)
+    if (r.ok && r.value) expect(r.value._tag).toBe('Completed')
+  })
+})

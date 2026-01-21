@@ -1,56 +1,56 @@
-import { describe, it, expect, vi } from "vitest";
-import { createUoW } from "./uow.impl";
-import { createEventBus } from "../infrastructure/eventBus.impl";
-import { TodoId, TodoEvent } from "../domain/todo.impl";
+import { describe, it, expect, vi } from 'vitest'
+import { createUoW } from './uow.impl'
+import { createEventBus } from '../infrastructure/eventBus.impl'
+import { TodoId, TodoEvent } from '../domain/todo.impl'
 
-describe("UnitOfWork", () => {
-  it("collects events", () => {
-    const bus = createEventBus();
-    const uow = createUoW(bus);
+describe('UnitOfWork', () => {
+  it('collects events', () => {
+    const bus = createEventBus()
+    const uow = createUoW(bus)
 
-    const id = TodoId.generate();
-    uow.events.push(TodoEvent.created(id));
-    uow.events.push(TodoEvent.completed(id));
+    const id = TodoId.generate()
+    uow.events.push(TodoEvent.created(id))
+    uow.events.push(TodoEvent.completed(id))
 
-    expect(uow.events).toHaveLength(2);
-  });
+    expect(uow.events).toHaveLength(2)
+  })
 
-  it("commit publishes all events", () => {
-    const bus = createEventBus();
-    const handler = vi.fn();
-    bus.subscribe(handler);
-    const uow = createUoW(bus);
+  it('commit publishes all events', () => {
+    const bus = createEventBus()
+    const handler = vi.fn()
+    bus.subscribe(handler)
+    const uow = createUoW(bus)
 
-    const id = TodoId.generate();
-    uow.events.push(TodoEvent.created(id));
-    uow.events.push(TodoEvent.completed(id));
-    uow.commit();
+    const id = TodoId.generate()
+    uow.events.push(TodoEvent.created(id))
+    uow.events.push(TodoEvent.completed(id))
+    uow.commit()
 
-    expect(handler).toHaveBeenCalledTimes(2);
-  });
+    expect(handler).toHaveBeenCalledTimes(2)
+  })
 
-  it("commit clears events", () => {
-    const bus = createEventBus();
-    const uow = createUoW(bus);
+  it('commit clears events', () => {
+    const bus = createEventBus()
+    const uow = createUoW(bus)
 
-    uow.events.push(TodoEvent.created(TodoId.generate()));
-    uow.commit();
+    uow.events.push(TodoEvent.created(TodoId.generate()))
+    uow.commit()
 
-    expect(uow.events).toHaveLength(0);
-  });
+    expect(uow.events).toHaveLength(0)
+  })
 
-  it("multiple commits work independently", () => {
-    const bus = createEventBus();
-    const handler = vi.fn();
-    bus.subscribe(handler);
-    const uow = createUoW(bus);
+  it('multiple commits work independently', () => {
+    const bus = createEventBus()
+    const handler = vi.fn()
+    bus.subscribe(handler)
+    const uow = createUoW(bus)
 
-    uow.events.push(TodoEvent.created(TodoId.generate()));
-    uow.commit();
+    uow.events.push(TodoEvent.created(TodoId.generate()))
+    uow.commit()
 
-    uow.events.push(TodoEvent.completed(TodoId.generate()));
-    uow.commit();
+    uow.events.push(TodoEvent.completed(TodoId.generate()))
+    uow.commit()
 
-    expect(handler).toHaveBeenCalledTimes(2);
-  });
-});
+    expect(handler).toHaveBeenCalledTimes(2)
+  })
+})

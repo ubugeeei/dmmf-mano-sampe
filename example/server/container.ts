@@ -1,8 +1,8 @@
-import { createEventBus } from "./infrastructure/eventBus.impl";
-import { createTodoRepository } from "./infrastructure/todoRepository.impl";
-import { createUoW } from "./application/uow.impl";
-import * as Command from "./application/todo.impl.cmd";
-import * as Query from "./application/todo.impl.query";
+import { createEventBus } from './infrastructure/eventBus.impl'
+import { createTodoRepository } from './infrastructure/todoRepository.impl'
+import { createUoW } from './application/uow.impl'
+import * as Command from './application/todo.impl.cmd'
+import * as Query from './application/todo.impl.query'
 
 /*
  *
@@ -10,10 +10,10 @@ import * as Query from "./application/todo.impl.query";
  *
  */
 
-const repo = createTodoRepository();
-const bus = createEventBus();
+const repo = createTodoRepository()
+const bus = createEventBus()
 
-bus.subscribe((e) => console.log(`[Event] ${e.type}:`, e.todoId));
+bus.subscribe(e => console.log(`[Event] ${e.type}:`, e.todoId))
 
 export const container = {
   createUoW: () => createUoW(bus),
@@ -26,4 +26,4 @@ export const container = {
   query: {
     getAll: Query.getAll(repo),
   },
-};
+}

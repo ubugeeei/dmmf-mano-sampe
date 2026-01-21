@@ -1,5 +1,5 @@
-import type { TodoEvent } from "../domain/todo.def";
-import type { EventBus } from "../infrastructure/eventBus.def";
+import type { TodoEvent } from '../domain/todo.def'
+import type { EventBus } from '../infrastructure/eventBus.def'
 
 /*
  *
@@ -8,8 +8,8 @@ import type { EventBus } from "../infrastructure/eventBus.def";
  */
 
 export type UoW = {
-  events: TodoEvent[];
-  commit: () => void;
-};
+  events: TodoEvent[]
+  commit: () => void
+}
 
-export type CreateUoW = (bus: EventBus) => UoW;
+export type CreateUoW = (bus: EventBus) => UoW

@@ -1,5 +1,6 @@
-export type { UoW } from "./uow.def";
-import type { UoW, CreateUoW } from "./uow.def";
+import type { UoW, CreateUoW } from './uow.def'
+
+export type { UoW } from './uow.def'
 
 /*
  *
@@ -8,12 +9,12 @@ import type { UoW, CreateUoW } from "./uow.def";
  */
 
 export const createUoW: CreateUoW = (bus) => {
-  const events: UoW["events"] = [];
+  const events: UoW['events'] = []
   return {
     events,
     commit: () => {
-      events.forEach((e) => bus.publish(e));
-      events.length = 0;
+      events.forEach(e => bus.publish(e))
+      events.length = 0
     },
-  };
-};
+  }
+}

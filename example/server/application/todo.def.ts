@@ -1,6 +1,6 @@
-import type { Eff } from "../../shared/index.def";
-import type { TodoRepository, TodoDTO } from "../domain/todo.def";
-import type { UoW } from "./uow.def";
+import type { Eff } from '../../shared/index.def'
+import type { TodoRepository, TodoDTO } from '../domain/todo.def'
+import type { UoW } from './uow.def'
 
 /*
  *
@@ -9,10 +9,10 @@ import type { UoW } from "./uow.def";
  */
 
 export type CreateInput = {
-  title: string;
-  description?: string;
-  priority?: string;
-};
+  title: string
+  description?: string
+  priority?: string
+}
 
 /*
  *
@@ -22,19 +22,19 @@ export type CreateInput = {
 
 export type Create = (
   repo: TodoRepository,
-) => (uow: UoW) => (input: CreateInput) => Eff<TodoDTO, CommandError>;
+) => (uow: UoW) => (input: CreateInput) => Eff<TodoDTO, CommandError>
 
 export type Complete = (
   repo: TodoRepository,
-) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>;
+) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>
 
 export type Reopen = (
   repo: TodoRepository,
-) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>;
+) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>
 
 export type Archive = (
   repo: TodoRepository,
-) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>;
+) => (uow: UoW) => (todoId: string) => Eff<TodoDTO, CommandError>
 
 /*
  *
@@ -42,7 +42,7 @@ export type Archive = (
  *
  */
 
-export type GetAll = (repo: TodoRepository) => (excludeArchived: boolean) => Eff<TodoDTO[], never>;
+export type GetAll = (repo: TodoRepository) => (excludeArchived: boolean) => Eff<TodoDTO[], never>
 
 /*
  *
@@ -50,24 +50,24 @@ export type GetAll = (repo: TodoRepository) => (excludeArchived: boolean) => Eff
  *
  */
 
-export type CommandError = ValidationError | InvalidIdError | NotFoundError | InvalidStateError;
+export type CommandError = ValidationError | InvalidIdError | NotFoundError | InvalidStateError
 
 export type ValidationError = {
-  _tag: "Validation";
-  errors: { field: string; message: string }[];
-};
+  _tag: 'Validation'
+  errors: { field: string, message: string }[]
+}
 
 export type InvalidIdError = {
-  _tag: "InvalidId";
-  message: string;
-};
+  _tag: 'InvalidId'
+  message: string
+}
 
 export type NotFoundError = {
-  _tag: "NotFound";
-};
+  _tag: 'NotFound'
+}
 
 export type InvalidStateError = {
-  _tag: "InvalidState";
-  expected: string;
-  actual: string;
-};
+  _tag: 'InvalidState'
+  expected: string
+  actual: string
+}
