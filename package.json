@@ -1,0 +1,33 @@
+{
+  "name": "dmmf-mano-sample",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "vite+": "node ./node_modules/vite-plus/bin/vite",
+    "fmt": "pnpm vite+ fmt --write",
+    "fmt:check": "pnpm vite+ fmt --check",
+    "lint": "pnpm vite+ lint",
+    "lint:fix": "pnpm vite+ lint --fix",
+    "check": "nuxt typecheck",
+    "test": "pnpm vite+ test",
+    "test:run": "pnpm vite+ test run"
+  },
+  "dependencies": {
+    "@vitest/browser": "^4.0.17",
+    "@vue/test-utils": "^2.4.6",
+    "nuxt": "^4.2.2",
+    "playwright": "^1.57.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.3",
+    "oxfmt": "^0.26.0",
+    "typescript": "^5.9.3",
+    "vite-plus": "latest",
+    "vitest": "^4.0.17"
+  },
+  "packageManager": "pnpm@10.28.1"
+}
