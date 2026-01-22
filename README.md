@@ -1,4 +1,4 @@
-# dmmf-book
+# 関数型ドメインモデリング
 
 ## Reference
 
